@@ -50,7 +50,8 @@ namespace MightyHomeAutomation
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            app.UseCookiePolicy();
+            // Not needed because the project is designed for internal, local use only.
+            // app.UseCookiePolicy();
 
             app.UseMvc();
         }
