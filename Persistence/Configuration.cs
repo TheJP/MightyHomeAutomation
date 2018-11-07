@@ -5,9 +5,11 @@ namespace MightyHomeAutomation.Persistence
 {
     public class Configuration
     {
+        [JsonRequired]
         [JsonProperty("devices")]
         public IList<Device> Devices { get; }
 
+        [JsonRequired]
         [JsonProperty("viewCards")]
         public IList<ViewCard> ViewCards { get; }
 

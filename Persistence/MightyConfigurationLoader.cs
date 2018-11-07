@@ -37,10 +37,15 @@ namespace MightyHomeAutomation.Persistence
                     return jsonSerializer.Deserialize<Configuration>(reader);
                 }
             }
-            catch (IOException e)
+            catch (IOException)
+            {
+                logger.LogCritical("Could not read specified configuration file '{ConfigFile}'", ConfigFile);
+                throw;
+            }
+            catch (JsonException)
             {
                 logger.LogCritical("Could not deserialize specified configuration file '{ConfigFile}'", ConfigFile);
-                throw e;
+                throw;
             }
         }
     }

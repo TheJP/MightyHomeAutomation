@@ -1,5 +1,17 @@
 {
-    "devices": [
-        
-    ]
+  "devices": [
+    {
+      "id": "MightyDevice",
+      "type": "DummyDevice"
+    }
+  ],
+
+  "viewCards": [
+    {
+      "type": "HelloWorld"
+    },
+    {
+      "type": ""
+    }
+  ]
 }
