@@ -19,6 +19,8 @@ namespace MightyHomeAutomation
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+                .ConfigureAppConfiguration((context, config) =>
+                    config.AddEnvironmentVariables("MIGHTYLAIR_"))
                 .UseStartup<Startup>();
     }
 }
