@@ -10,4 +10,10 @@
     <PackageReference Include="RestSharp" Version="106.5.4" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="DefaultConfiguration.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>

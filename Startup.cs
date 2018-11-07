@@ -9,19 +9,21 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using MightyHomeAutomation.Persistence;
 
 namespace MightyHomeAutomation
 {
     public class Startup
     {
-        private const string ConfigKeyMightyConfigFile = "MightyConfigFile";
+        private IConfiguration Configuration { get; }
+        public ILoggerFactory LoggerFactory { get; }
 
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, ILoggerFactory loggerFactory)
         {
             Configuration = configuration;
+            LoggerFactory = loggerFactory;
         }
-
-        public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -36,7 +38,8 @@ namespace MightyHomeAutomation
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
-            var configFile = Configuration[ConfigKeyMightyConfigFile];
+            var configurationLoader = new MightyConfigurationLoader(Configuration, LoggerFactory);
+            services.AddSingleton(configurationLoader.Load());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
