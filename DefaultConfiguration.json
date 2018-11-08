@@ -11,7 +11,12 @@
       "type": "HelloWorld"
     },
     {
-      "type": ""
+      "type": "Information",
+      "parameters": ["MightyDevice.Temperature"]
+    },
+    {
+      "type": "Button",
+      "parameters": ["MightyDevice.IncreaseTemperature"]
     }
   ]
 }
