@@ -39,7 +39,7 @@ namespace MightyHomeAutomation
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
-            var dm = new DeviceManager();
+            var dm = new DeviceTypeManager();
             var configurationLoader = new MightyConfigurationLoader(Configuration, LoggerFactory);
             services.AddSingleton(configurationLoader.Load());
         }
