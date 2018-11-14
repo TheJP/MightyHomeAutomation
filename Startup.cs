@@ -39,9 +39,9 @@ namespace MightyHomeAutomation
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
-            var dm = new DeviceTypeManager();
             var configurationLoader = new MightyConfigurationLoader(Configuration, LoggerFactory);
             services.AddSingleton(configurationLoader.Load());
+            services.AddSingleton(DeviceTypeManager.Load());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

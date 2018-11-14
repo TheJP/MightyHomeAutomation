@@ -1,15 +1,17 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace MightyHomeAutomation.Logic.Devices
 {
     [RegisterDeviceType("DummyDevice")]
     public class Dummy : DeviceTypeBase
     {
-        public Dummy() : base(
-            new Dictionary<string, Action<string>>(),
-            new Dictionary<string, Func<string, string>>())
-        {
+        private int value = 25;
+
+        public Dummy(){
+            AddSensor("Temperature", _ => value.ToString());
+            AddAction("IncreaseTemperature", _ => Interlocked.Increment(ref value));
         }
     }
 }
