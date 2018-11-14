@@ -1,0 +1,18 @@
+﻿@model IList<ViewCard>
+
+<div data-uk-grid class="uk-grid-match uk-text-center">
+    @foreach(var card in Model)
+    {
+        <div>
+            @try
+            {
+                <partial name="~/Pages/ViewCards/_@(card.Type).cshtml" model="@card.Parameters" />
+            }
+            catch (InvalidOperationException)
+            {
+                <partial name="_ErrorViewCard" model="@($"Could not display card '{card.Type}'")" />
+            }
+
+        </div>
+    }
+</div>
