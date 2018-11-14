@@ -14,9 +14,9 @@ namespace MightyHomeAutomation.Persistence
         public string Type { get; }
 
         [JsonProperty("parameters")]
-        public IReadOnlyList<string> Parameters { get; }
+        public IReadOnlyDictionary<string, string> Parameters { get; }
 
-        public Device(string id, string type, IReadOnlyList<string> parameters)
+        public Device(string id, string type, IReadOnlyDictionary<string, string> parameters)
         {
             Id = id;
             Type = type;

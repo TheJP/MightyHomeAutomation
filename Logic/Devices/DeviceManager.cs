@@ -1,6 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using MightyHomeAutomation.Persistence;
+using System.Linq;
 
 namespace MightyHomeAutomation.Logic.Devices
 {
@@ -10,11 +11,23 @@ namespace MightyHomeAutomation.Logic.Devices
         public IReadOnlyDictionary<string, DeviceType> Devices =>
             new ReadOnlyDictionary<string, DeviceType>(devices);
 
-        public DeviceManager(Configuration configuration)
+        public DeviceManager()
         {
-            foreach (var device in configuration.Devices)
+            var list = AppDomain.CurrentDomain.GetAssemblies()
+                .SelectMany(assembly => assembly.GetTypes())
+                .Select(type =>
+                {
+                    var attributes = type.GetCustomAttributes(typeof(RegisterDeviceTypeAttribute), false);
+                    var attribute = attributes == null || attributes.Length <= 0 ? null : attributes[0];
+                    return (type, attribute);
+                })
+                .Where(tuple => tuple.attribute != null)
+                .ToList();
+
+            // TODO: Add devices to the dictionary
+            foreach (var e in list)
             {
-                // TODO: Create devices using the type
+                Console.WriteLine(e.attribute);
             }
         }
     }

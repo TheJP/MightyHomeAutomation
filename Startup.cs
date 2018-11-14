@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using MightyHomeAutomation.Logic.Devices;
 using MightyHomeAutomation.Persistence;
 
 namespace MightyHomeAutomation
@@ -38,6 +39,7 @@ namespace MightyHomeAutomation
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
+            var dm = new DeviceManager();
             var configurationLoader = new MightyConfigurationLoader(Configuration, LoggerFactory);
             services.AddSingleton(configurationLoader.Load());
         }
