@@ -32,8 +32,8 @@ $(document).ready(function () {
 
     $('[data-mighty-load]').each(function () {
         const element = $(this);
-        loaders.push(new Loader(element.attr('data-mighty-load'), value =>
-            element.text(value)));
+        loaders.push(new Loader(element.attr('data-mighty-load'),
+            value => element.text(value)));
     });
 
     load();

@@ -12,7 +12,7 @@
     },
     {
       "type": "Information",
-      "parameters": ["MightyDevice.Temperature"]
+      "parameters": ["Dummy Temperature:MightyDevice.Temperature"]
     },
     {
       "type": "Button",
