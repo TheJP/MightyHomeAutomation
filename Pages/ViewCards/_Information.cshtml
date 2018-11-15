@@ -1,0 +1,20 @@
+﻿@model IList<string>
+
+<div class="uk-card uk-card-default uk-card-hover uk-card-body">
+    @if (Model != null)
+    {
+        <ul class="uk-list uk-list-divider">
+            @foreach (var parameter in Model)
+            {
+                <li>@{
+                    var columns = parameter.Split(':', 2);
+                    if (columns.Length > 1)
+                    {
+                        <span>@columns[0]:</span>
+                    }
+                    <span data-mighty-load="@columns.Last()">Loading...</span>
+                }</li>
+            }
+        </ul>
+    }
+</div>
