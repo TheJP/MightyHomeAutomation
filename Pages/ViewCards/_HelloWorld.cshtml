@@ -1,15 +1,13 @@
 ﻿@model IList<string>
 
-<div class="uk-card uk-card-default uk-card-hover uk-card-body">
-    <h3 class="uk-card-title">Hello World</h3>
-    @if (Model != null)
-    {
-        <p class="uk-text-left">Parameters:</p>
-        <ul>
-            @foreach (var parameter in Model)
-            {
-                <li>@parameter</li>
-            }
-        </ul>
-    }
-</div>
+<h3 class="uk-card-title">Hello World</h3>
+@if (Model != null)
+{
+    <p class="uk-text-left">Parameters:</p>
+    <ul>
+        @foreach (var parameter in Model)
+        {
+            <li>@parameter</li>
+        }
+    </ul>
+}

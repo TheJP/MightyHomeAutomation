@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace MightyHomeAutomation.Persistence
 {
@@ -9,13 +9,17 @@ namespace MightyHomeAutomation.Persistence
         [JsonProperty("type")]
         public string Type { get; }
 
+        [JsonProperty("title")]
+        public string Title { get; }
+
         [JsonProperty("parameters")]
         public IReadOnlyList<string> Parameters { get; }
 
         [JsonConstructor]
-        public ViewCard(string type, IReadOnlyList<string> parameters)
+        public ViewCard(string type, string title, IReadOnlyList<string> parameters)
         {
             Type = type;
+            Title = title;
             Parameters = parameters;
         }
     }

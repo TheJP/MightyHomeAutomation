@@ -3,7 +3,11 @@
 <div data-uk-grid class="uk-grid-match uk-text-center">
     @foreach(var card in Model)
     {
-        <div>
+        <div><div class="uk-card uk-card-default uk-card-hover uk-card-body">
+            @if (!string.IsNullOrEmpty(card.Title))
+            {
+                <h3 class="uk-card-title">@card.Title</h3>
+            }
             @try
             {
                 <partial name="~/Pages/ViewCards/_@(card.Type).cshtml" model="@card.Parameters" />
@@ -12,7 +16,6 @@
             {
                 <partial name="_ErrorViewCard" model="@($"Could not display card '{card.Type}'")" />
             }
-
-        </div>
+        </div></div>
     }
 </div>
