@@ -5,7 +5,15 @@ namespace MightyHomeAutomation.Logic.Devices
 {
     public interface DeviceType
     {
-        IReadOnlyDictionary<string, Action<string>> Actions { get; }
-        IReadOnlyDictionary<string, Func<string, string>> Sensors { get; }
+        IEnumerable<string> Actions { get; }
+        IEnumerable<string> Sensors { get; }
+
+        bool ContainsAction(string name);
+
+        bool ContainsSensor(string name);
+
+        void ExecuteAction(string name, string parameter = "");
+
+        string ReadSensor(string name, string parameter = "");
     }
 }

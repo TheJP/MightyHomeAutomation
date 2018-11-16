@@ -19,30 +19,49 @@ namespace MightyHomeAutomation.Controller
             DeviceTypeManager = deviceTypeManager;
         }
 
-        public IEnumerable<Device> GetAll() => Devices.Values;
+        private DeviceType GetDeviceType(string id) => DeviceTypeManager.Devices[Devices[id].Type];
 
-        [HttpGet("{id}/actions")]
-        public ActionResult<IEnumerable<string>> GetActions(string id)
+        public IEnumerable<string> GetAll() => Devices.Keys;
+
+        private ActionResult CheckDeviceExists(string id)
         {
             if (!Devices.ContainsKey(id))
             {
                 return BadRequest("Device with given id does not exist");
             }
-            // If the following access failes, the server has an error in the configuration.
-            // So it is correct to throw an exception.
-            return Ok(DeviceTypeManager.Devices[Devices[id].Type].Actions.Keys);
+            return null;
         }
 
+        [HttpGet("{id}")]
+        public ActionResult<Device> Get(string id) =>
+            CheckDeviceExists(id) ?? Ok(new { Id = id, Type = Devices[id].Type });
+
+        [HttpGet("{id}/actions")]
+        public ActionResult<IEnumerable<string>> GetActions(string id) =>
+            CheckDeviceExists(id) ?? Ok(GetDeviceType(id).Actions);
+
         [HttpGet("{id}/sensors")]
-        public ActionResult<IEnumerable<string>> GetSensors(string id)
+        public ActionResult<IEnumerable<string>> GetSensors(string id) =>
+            CheckDeviceExists(id) ?? Ok(GetDeviceType(id).Sensors);
+
+        [HttpPost("{id}/actions/{action}/execute")]
+        public ActionResult ExecuteAction(string id, string action, [FromBody] string input = "")
         {
-            if (!Devices.ContainsKey(id))
+            ActionResult CheckActionExists(DeviceType device)
             {
-                return BadRequest("Device with given id does not exist");
+                if (!device.ContainsAction(action))
+                {
+                    return BadRequest("");
+                }
+                return null;
             }
-            // If the following access failes, the server has an error in the configuration.
-            // So it is correct to throw an exception.
-            return Ok(DeviceTypeManager.Devices[Devices[id].Type].Sensors.Keys);
+            var result = CheckDeviceExists(id) ?? CheckActionExists(GetDeviceType(id));
+            if (result == null)
+            {
+                GetDeviceType(id).ExecuteAction(action, input);
+                result = Ok();
+            }
+            return result;
         }
     }
 }
