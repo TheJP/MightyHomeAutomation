@@ -12,8 +12,8 @@ namespace MightyHomeAutomation.Logic.Devices
 
         bool ContainsSensor(string name);
 
-        void ExecuteAction(string name, string parameter = "");
+        void ExecuteAction(string name, IDictionary<string, string> parameter = null);
 
-        string ReadSensor(string name, string parameter = "");
+        string ReadSensor(string name, IList<string> parameter = null);
     }
 }
