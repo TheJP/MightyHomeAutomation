@@ -63,7 +63,7 @@ namespace MightyHomeAutomation.Controller
             var result = CheckDeviceExists(id) ?? CheckActionExists(GetDeviceType(id));
             if (result == null)
             {
-                GetDeviceType(id).ExecuteAction(actionName, null);
+                GetDeviceType(id).ExecuteAction(actionName, Devices[id].Parameters);
                 result = Ok("Success");
             }
             return result;
@@ -84,7 +84,7 @@ namespace MightyHomeAutomation.Controller
 
             return CheckDeviceExists(id) ??
                 CheckSensorExists(GetDeviceType(id)) ??
-                Ok(GetDeviceType(id).ReadSensor(sensor, null));
+                Ok(GetDeviceType(id).ReadSensor(sensor, Devices[id].Parameters));
         }
 
         [HttpPost("readsensors")]
