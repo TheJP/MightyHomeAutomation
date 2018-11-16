@@ -44,24 +44,64 @@ namespace MightyHomeAutomation.Controller
         public ActionResult<IEnumerable<string>> GetSensors(string id) =>
             CheckDeviceExists(id) ?? Ok(GetDeviceType(id).Sensors);
 
-        [HttpPost("{id}/actions/{action}/execute")]
-        public ActionResult ExecuteAction(string id, string action, [FromBody] string input = "")
+        [HttpPost("{id}/actions/{actionName}/execute")]
+        public ActionResult ExecuteAction(string id, string actionName, [FromBody] string input = "")
         {
             ActionResult CheckActionExists(DeviceType device)
             {
-                if (!device.ContainsAction(action))
+                if (!device.ContainsAction(actionName))
                 {
-                    return BadRequest("");
+                    return BadRequest("Action with given name does not exist for device with given id");
                 }
                 return null;
             }
+
             var result = CheckDeviceExists(id) ?? CheckActionExists(GetDeviceType(id));
             if (result == null)
             {
-                GetDeviceType(id).ExecuteAction(action, input);
+                GetDeviceType(id).ExecuteAction(actionName, input);
                 result = Ok();
             }
             return result;
+        }
+
+        [HttpPost("{id}/sensors/{sensor}/read")]
+        public ActionResult<string> ReadSensor(string id, string sensor, [FromBody] string input = "")
+        {
+            ActionResult CheckSensorExists(DeviceType device)
+            {
+                if (!device.ContainsSensor(sensor))
+                {
+                    return BadRequest("Sensor with given name does not exist for device with given id");
+                }
+                return null;
+            }
+
+            return CheckDeviceExists(id) ??
+                CheckSensorExists(GetDeviceType(id)) ??
+                Ok(GetDeviceType(id).ReadSensor(sensor, input));
+        }
+
+        [HttpPost("readsensors")]
+        public ActionResult<IEnumerable<string>> ReadSensors([FromBody] IList<string> queries)
+        {
+            // Check if queries have correct format
+            var split = queries.Select(query => query.Split('.'));
+            if (split.Any(s => s.Length != 2))
+            {
+                return BadRequest("Invalid query string");
+            }
+            var tuples = split.Select(s => (deviceId: s[0], sensor: s[1]));
+
+            // Check if device and sensor exist for each query
+            if (tuples.Any(t => !Devices.ContainsKey(t.deviceId) ||
+                !GetDeviceType(t.deviceId).ContainsSensor(t.sensor)))
+            {
+                return BadRequest("Device with given id does not exist or does not have sensor with given name");
+            }
+
+            // Read sensors for each query
+            return Ok(tuples.Select(t => GetDeviceType(t.deviceId).ReadSensor(t.sensor)));
         }
     }
 }

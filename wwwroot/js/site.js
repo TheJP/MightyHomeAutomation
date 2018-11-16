@@ -23,11 +23,24 @@ class Loader {
 
 $(document).ready(function () {
 
+    /** @type {Loader[]} */
     const loaders = [];
 
     const load = () => {
-        // TODO: Implement
-        loaders.forEach(loader => loader.callback('test'));
+        const queries = loaders.map(loader => loader.value);
+        $.ajax({
+            method: 'POST',
+            url: '/api/devices/readsensors',
+            data: JSON.stringify(queries),
+            contentType: "application/json; charset=utf-8",
+            dataType: 'json'
+        })
+            .done(data => {
+                for (let i = 0; i < data.length; ++i) {
+                    loaders[i].callback(data[i]);
+                }
+            })
+            .fail(error => console.error(error));
     };
 
     $('[data-mighty-load]').each(function () {
