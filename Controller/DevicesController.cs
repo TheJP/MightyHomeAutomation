@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using MightyHomeAutomation.Logic.Devices;
 using MightyHomeAutomation.Persistence;
 
@@ -12,11 +13,13 @@ namespace MightyHomeAutomation.Controller
     {
         private IDictionary<string, Device> Devices { get; }
         private DeviceTypeManager DeviceTypeManager { get; }
+        private ILogger Logger { get; }
 
-        public DevicesController(Configuration configuration, DeviceTypeManager deviceTypeManager)
+        public DevicesController(Configuration configuration, DeviceTypeManager deviceTypeManager, ILoggerFactory loggerFactory)
         {
             Devices = configuration.Devices.ToDictionary(device => device.Id);
             DeviceTypeManager = deviceTypeManager;
+            Logger = loggerFactory.CreateLogger<DevicesController>();
         }
 
         private DeviceType GetDeviceType(string id) => DeviceTypeManager.Devices[Devices[id].Type];
@@ -45,8 +48,9 @@ namespace MightyHomeAutomation.Controller
             CheckDeviceExists(id) ?? Ok(GetDeviceType(id).Sensors);
 
         [HttpPost("{id}/actions/{actionName}/execute")]
-        public ActionResult ExecuteAction(string id, string actionName, [FromBody] string input = "")
+        public ActionResult<string> ExecuteAction(string id, string actionName)
         {
+            Logger.LogInformation("Execute action {Device}.{Action} by {IP}", id, actionName, HttpContext.Connection.RemoteIpAddress.ToString());
             ActionResult CheckActionExists(DeviceType device)
             {
                 if (!device.ContainsAction(actionName))
@@ -59,15 +63,16 @@ namespace MightyHomeAutomation.Controller
             var result = CheckDeviceExists(id) ?? CheckActionExists(GetDeviceType(id));
             if (result == null)
             {
-                GetDeviceType(id).ExecuteAction(actionName, input);
-                result = Ok();
+                GetDeviceType(id).ExecuteAction(actionName, null);
+                result = Ok("Success");
             }
             return result;
         }
 
         [HttpPost("{id}/sensors/{sensor}/read")]
-        public ActionResult<string> ReadSensor(string id, string sensor, [FromBody] string input = "")
+        public ActionResult<string> ReadSensor(string id, string sensor)
         {
+            Logger.LogInformation("Read sensor {Device}.{Sensor} by {IP}", id, sensor, HttpContext.Connection.RemoteIpAddress.ToString());
             ActionResult CheckSensorExists(DeviceType device)
             {
                 if (!device.ContainsSensor(sensor))
@@ -79,12 +84,14 @@ namespace MightyHomeAutomation.Controller
 
             return CheckDeviceExists(id) ??
                 CheckSensorExists(GetDeviceType(id)) ??
-                Ok(GetDeviceType(id).ReadSensor(sensor, input));
+                Ok(GetDeviceType(id).ReadSensor(sensor, null));
         }
 
         [HttpPost("readsensors")]
         public ActionResult<IEnumerable<string>> ReadSensors([FromBody] IList<string> queries)
         {
+            Logger.LogInformation("Read sensors by {IP}", HttpContext.Connection.RemoteIpAddress.ToString());
+
             // Check if queries have correct format
             var split = queries.Select(query => query.Split('.'));
             if (split.Any(s => s.Length != 2))

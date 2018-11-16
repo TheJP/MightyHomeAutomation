@@ -11,9 +11,9 @@ namespace MightyHomeAutomation.Pages
     {
         public string Action { get; set; }
 
-        public void OnGet(string action)
+        public void OnGet(string actionName)
         {
-            Action = action;
+            Action = actionName;
         }
     }
 }

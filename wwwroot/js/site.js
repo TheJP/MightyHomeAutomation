@@ -36,6 +36,7 @@ $(document).ready(function () {
             dataType: 'json'
         })
             .done(data => {
+                // Set new values at all targets
                 for (let i = 0; i < data.length; ++i) {
                     loaders[i].callback(data[i]);
                 }
@@ -43,10 +44,30 @@ $(document).ready(function () {
             .fail(error => console.error(error));
     };
 
+    /**
+     * Executes given action on device with given id remotely.
+     * 
+     * @param {string} deviceId Id of the device for which action should be executed.
+     * @param {string} actionName Name of the action to execute.
+     */
+    function executeAction(deviceId, actionName) {
+        $.ajax({
+            method: 'POST',
+            url: `/api/devices/${deviceId}/actions/${actionName}/execute`
+        })
+            .done(() => load())
+            .fail(error => console.error(error));
+    }
+
     $('[data-mighty-load]').each(function () {
         const element = $(this);
         loaders.push(new Loader(element.attr('data-mighty-load'),
             value => element.text(value)));
+    });
+
+    $('[data-mighty-button]').click(function () {
+        const action = $(this).attr('data-mighty-button').split('.');
+        executeAction(action[0], action[1]);
     });
 
     load();

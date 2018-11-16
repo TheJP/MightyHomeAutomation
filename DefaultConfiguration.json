@@ -16,7 +16,7 @@
     },
     {
       "type": "Button",
-      "parameters": ["MightyDevice.IncreaseTemperature"]
+      "parameters": ["Increase Temperature:MightyDevice.IncreaseTemperature"]
     }
   ]
 }
