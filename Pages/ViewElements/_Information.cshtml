@@ -1,0 +1,10 @@
+﻿@model ViewElement
+
+@{
+    var columns = Model.Options.Split(':', 2);
+    if (columns.Length > 1)
+    {
+        <span>@columns[0]:</span>
+    }
+}
+<span data-mighty-load="@columns.Last()">Loading...</span>

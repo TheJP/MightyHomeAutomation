@@ -1,0 +1,7 @@
+@model ViewElement
+
+@{
+    var columns = Model.Options.Split(':', 2);
+    var display = columns.Length < 2 ? columns[0].Split('.').Last() : columns[0];
+}
+<button class="uk-button uk-button-default" data-mighty-button="@columns.Last()">@display</button>

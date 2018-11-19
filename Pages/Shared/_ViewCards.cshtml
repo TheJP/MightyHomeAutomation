@@ -1,21 +1,29 @@
 ﻿@model IList<ViewCard>
 
 <div data-uk-grid class="uk-grid-match uk-text-center">
-    @foreach(var card in Model)
+    @foreach (var card in Model)
     {
         <div><div class="uk-card uk-card-default uk-card-hover uk-card-body">
             @if (!string.IsNullOrEmpty(card.Title))
             {
                 <h3 class="uk-card-title">@card.Title</h3>
             }
-            @try
+            <ul class="uk-list uk-list-divider">
+            @foreach (var component in card.Components)
             {
-                <partial name="~/Pages/ViewCards/_@(card.Type).cshtml" model="@card.Parameters" />
+                <li>
+                @try
+                {
+                    <partial name="~/Pages/ViewElements/_@(component.Type).cshtml" model="@component" />
+                }
+                catch (InvalidOperationException)
+                {
+                    <span class="uk-label uk-label-danger">Danger</span>
+                    <span>Could not display component '@component.Type'!</span>
+                }
+                </li>
             }
-            catch (InvalidOperationException)
-            {
-                <partial name="_ErrorViewCard" model="@($"Could not display card '{card.Type}'")" />
-            }
+            </ul>
         </div></div>
     }
 </div>

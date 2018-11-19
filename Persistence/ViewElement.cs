@@ -1,8 +1,8 @@
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace MightyHomeAutomation.Persistence
 {
-    public class ViewComponent
+    public class ViewElement
     {
         [JsonRequired]
         [JsonProperty("type")]
@@ -12,7 +12,7 @@ namespace MightyHomeAutomation.Persistence
         public string Options { get; }
 
         [JsonConstructor]
-        public ViewComponent(string type, string options){
+        public ViewElement(string type, string options){
             Type = type;
             Options = options;
         }

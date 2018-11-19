@@ -9,10 +9,10 @@ namespace MightyHomeAutomation.Persistence
         public string Title { get; }
 
         [JsonProperty("components")]
-        public IReadOnlyList<ViewComponent> Components { get; }
+        public IReadOnlyList<ViewElement> Components { get; }
 
         [JsonConstructor]
-        public ViewCard(string title, IReadOnlyList<ViewComponent> components)
+        public ViewCard(string title, IReadOnlyList<ViewElement> components)
         {
             Title = title;
             Components = components;
