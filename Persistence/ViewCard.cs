@@ -5,22 +5,17 @@ namespace MightyHomeAutomation.Persistence
 {
     public class ViewCard
     {
-        [JsonRequired]
-        [JsonProperty("type")]
-        public string Type { get; }
-
         [JsonProperty("title")]
         public string Title { get; }
 
-        [JsonProperty("parameters")]
-        public IReadOnlyList<string> Parameters { get; }
+        [JsonProperty("components")]
+        public IReadOnlyList<ViewComponent> Components { get; }
 
         [JsonConstructor]
-        public ViewCard(string type, string title, IReadOnlyList<string> parameters)
+        public ViewCard(string title, IReadOnlyList<ViewComponent> components)
         {
-            Type = type;
             Title = title;
-            Parameters = parameters;
+            Components = components;
         }
     }
 }

@@ -8,15 +8,24 @@
 
   "viewCards": [
     {
-      "type": "HelloWorld"
+      "components": [{
+        "type": "HelloWorld"
+      }]
     },
     {
-      "type": "Information",
-      "parameters": ["Dummy Temperature:MightyDevice.Temperature"]
+      "title": "Information",
+      "components":[{
+        "type": "Information",
+        "options": "Dummy Temperature:MightyDevice.Temperature"
+      }]
     },
     {
-      "type": "Button",
-      "parameters": ["Increase Temperature:MightyDevice.IncreaseTemperature"]
+      "title": "Action",
+      "components":[{
+        "type": "Button",
+        "options": "Increase Temperature:MightyDevice.IncreaseTemperature"
+      }]
+      
     }
   ]
 }
