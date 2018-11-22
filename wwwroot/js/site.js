@@ -14,10 +14,22 @@ class Loader {
      * 
      * @param {string} value Sensor data to be loaded.
      * @param {loadCallback} callback Callback that is called when the data is loaded.
+     * @param {boolean|number} refresh Specifies, if the loader should be refreshed regularly and if yes, at what ms rate.
      */
-    constructor(value, callback) {
+    constructor(value, callback, refresh) {
         this.value = value;
         this.callback = callback;
+        this.refresh = refresh;
+        this.lastUpdate = new Date(0); // Never been updated so far
+    }
+
+    /**
+     * Check if the value of this loader is outdated compared to the given time.
+     * @param {Date} now Date used to check if the loader is outdated.
+     */
+    isOutdated(now) {
+        if (!this.refresh) { return false; }
+        else { return now - this.lastUpdate >= this.refresh; }
     }
 }
 
@@ -26,8 +38,12 @@ $(document).ready(function () {
     /** @type {Loader[]} */
     const loaders = [];
 
-    const load = () => {
-        const queries = loaders.map(loader => loader.value);
+    /** Load data for all loaders or for all loaders that satisfy the given filter. */
+    const load = (filter = false) => {
+        const filteredLoaders = filter ? loaders.filter(filter) : loaders;
+        if (filteredLoaders.length <= 0) { return; }
+
+        const queries = filteredLoaders.map(loader => loader.value);
         $.ajax({
             method: 'POST',
             url: '/api/devices/readsensors',
@@ -37,11 +53,19 @@ $(document).ready(function () {
         })
             .done(data => {
                 // Set new values at all targets
+                const updated = Date.now();
                 for (let i = 0; i < data.length; ++i) {
                     loaders[i].callback(data[i]);
+                    loaders[i].lastUpdate = updated;
                 }
             })
             .fail(error => console.error(error));
+    };
+
+    /** Load data for outdated loaders. */
+    const loadOutdated = () => {
+        const now = Date.now();
+        load(loader => loader.isOutdated(now));
     };
 
     /**
@@ -61,8 +85,10 @@ $(document).ready(function () {
 
     $('[data-mighty-load]').each(function () {
         const element = $(this);
+        const refreshRate = element.is('[data-mighty-refresh]') ?
+            parseInt(element.attr('data-mighty-refresh')) : false;
         loaders.push(new Loader(element.attr('data-mighty-load'),
-            value => element.text(value)));
+            value => element.text(value), refreshRate));
     });
 
     $('[data-mighty-button]').click(function () {
@@ -71,4 +97,5 @@ $(document).ready(function () {
     });
 
     load();
+    setInterval(loadOutdated, 1000);
 });
