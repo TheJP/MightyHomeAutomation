@@ -1,11 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,6 +12,8 @@ namespace MightyHomeAutomation
 {
     public class Startup
     {
+        private const string ConfigKeyEnableHttpsRedirection = "EnableHTTPSRedirection";
+
         private IConfiguration Configuration { get; }
         public ILoggerFactory LoggerFactory { get; }
 
@@ -57,7 +54,11 @@ namespace MightyHomeAutomation
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
+            if (bool.TryParse(Configuration[ConfigKeyEnableHttpsRedirection], out var enable) && enable)
+            {
+                app.UseHttpsRedirection();
+            }
+
             app.UseStaticFiles();
             // Not needed because the project is designed for internal, local use only.
             // app.UseCookiePolicy();
