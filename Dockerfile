@@ -5,7 +5,7 @@ EXPOSE 44303
 
 FROM microsoft/dotnet:2.1-sdk AS build
 WORKDIR /src
-COPY ["MightyHomeAutomation.csproj", ""]
+COPY ["MightyHomeAutomation.csproj", "/MightyHomeAutomation.csproj"]
 RUN dotnet restore "/MightyHomeAutomation.csproj"
 COPY . .
 WORKDIR "/src/"
