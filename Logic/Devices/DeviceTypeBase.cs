@@ -17,9 +17,9 @@ namespace MightyHomeAutomation.Logic.Devices
 
         public bool ContainsSensor(string name) => sensors.ContainsKey(name);
 
-        public void ExecuteAction(string name, IReadOnlyDictionary<string, string> parameter = null) => actions[name](parameter);
+        public void ExecuteAction(string name, IReadOnlyDictionary<string, string> parameters) => actions[name](parameters);
 
-        public string ReadSensor(string name, IReadOnlyDictionary<string, string> parameter = null) => sensors[name](parameter);
+        public string ReadSensor(string name, IReadOnlyDictionary<string, string> parameters) => sensors[name](parameters);
 
         protected void AddAction(string id, Action<IReadOnlyDictionary<string, string>> action) => actions.Add(id, action);
 

@@ -108,7 +108,7 @@ namespace MightyHomeAutomation.Controller
             }
 
             // Read sensors for each query
-            return Ok(tuples.Select(t => GetDeviceType(t.deviceId).ReadSensor(t.sensor)));
+            return Ok(tuples.Select(t => GetDeviceType(t.deviceId).ReadSensor(t.sensor, Devices[t.deviceId].Parameters)));
         }
     }
 }
