@@ -20,7 +20,6 @@
         @RenderBody()
     </div>
 
-    <script src="~/js/site.js" asp-append-version="true"></script>
     <environment include="Development">
         <script src="~/lib/jquery/js/jquery.js"></script>
         <script src="~/lib/uikit/js/uikit.js"></script>
@@ -32,6 +31,7 @@
         <script src="~/lib/uikit/js/uikit-icons.min.js"></script>
         @*<script src="~/js/site.min.js" asp-append-version="true"></script>*@
     </environment>
+    <script src="~/js/site.js" asp-append-version="true"></script>
 
     @RenderSection("Scripts", required: false)
 </body>
